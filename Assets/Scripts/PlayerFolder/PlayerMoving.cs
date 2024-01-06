@@ -17,18 +17,21 @@ namespace ParkourGame.PlayerFolder
 
         [Header("Component")]
         [SerializeField] private Rigidbody2D _rb;
-
+        [SerializeField] private PlayerAnimation _playerAnimation;
+        
         private bool _isGrounded;
-
+        private bool _isRunning;
         #endregion
 
         #region Unity lifecycle
-
+        
+        
         private void Update()
         {
-            //_isGrounded = GroundCheck();
+            
+            Animation();
             Moving();
-
+            
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 Jump();
@@ -46,7 +49,7 @@ namespace ParkourGame.PlayerFolder
 
         private void Jump()
         {
-            if (GroundCheck())
+            if (GroundCheck()) 
             {
                 _rb.velocity = new Vector2(_moveSpeed, _jumpForce);
             }
@@ -56,6 +59,14 @@ namespace ParkourGame.PlayerFolder
         private void Moving()
         {
             _rb.velocity = new Vector2(_moveSpeed, _rb.velocity.y);
+            
+        } 
+
+        private void Animation()
+        {
+            _playerAnimation.SetFloatRun(_rb.velocity.x);
+            _playerAnimation.SetBoolJump(GroundCheck());
+            _playerAnimation.SetFloatJump(_rb.velocity.y); 
         }
 
         private void OnDrawGizmos()
