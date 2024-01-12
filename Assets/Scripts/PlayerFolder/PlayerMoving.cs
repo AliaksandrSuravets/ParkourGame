@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace ParkourGame.PlayerFolder
@@ -21,20 +22,39 @@ namespace ParkourGame.PlayerFolder
         [Header("Component")]
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private PlayerAnimation _playerAnimation;
+        [SerializeField] private SpriteRenderer _sr;
 
         [Header("Slide info")]
         [SerializeField] private float _slideSpeed;
         [SerializeField] private float _slideTimer;
         [SerializeField] private float _slideCooldown;
+        [SerializeField] private float _ceillingCheckDistance;
+
+        [Header("Ledge info")]
+        [SerializeField] private Vector2 _offset1;
+        [SerializeField] private Vector2 _offset2;
+
+        [Header("Knockback info")]
+        [SerializeField] private Vector2 _knockackDir;
+        private bool _canBeKnocked = true;
+        private bool _canClimb;
 
         private bool _canDoubleJump;
+        private bool _canGrabLedge = true;
+        private bool _ceillingDetected;
+
+        private Vector2 _climbBegunPosition;
+        private Vector2 _climbOverPosition;
+
+        private bool _isDead;
 
         private bool _isGrounded;
+        private bool _isKnocked;
         private bool _isRunning;
         private bool _isSliding;
         private bool _isWall;
+        private bool _ledgeDetected;
         private float _slideCooldownCounter;
-
         private float _slideTimerCounter;
 
         #endregion
@@ -47,10 +67,18 @@ namespace ParkourGame.PlayerFolder
             _slideCooldownCounter -= Time.deltaTime;
 
             Animation();
-            if (!WallCheck())
+
+            if (_isDead)
             {
-                Moving();
+                return;
             }
+
+            if (_isKnocked)
+            {
+                return;
+            }
+
+            Moving();
 
             if (GroundCheck())
             {
@@ -67,6 +95,7 @@ namespace ParkourGame.PlayerFolder
                 Slide();
             }
 
+            CheckForLedge();
             CheckForSlide();
         }
 
@@ -74,27 +103,83 @@ namespace ParkourGame.PlayerFolder
         {
             Gizmos.DrawLine(transform.position,
                 new Vector2(transform.position.x, transform.position.y - _groundCheckDistance));
+            Gizmos.DrawLine(transform.position,
+                new Vector2(transform.position.x, transform.position.y + _ceillingCheckDistance));
             Gizmos.DrawWireCube(_wallCheck.position, _wallCheckSize);
+        }
+
+        #endregion
+
+        #region Public methods
+
+        public void SetLedge(bool value)
+        {
+            _ledgeDetected = value;
         }
 
         #endregion
 
         #region Private methods
 
+        private void AllowLedgeGrab()
+        {
+            _canGrabLedge = true;
+        }
+
         private void Animation()
         {
             _playerAnimation.SetFloatRun(_rb.velocity.x);
-            _playerAnimation.SetBoolJump(GroundCheck());
             _playerAnimation.SetFloatJump(_rb.velocity.y);
+            _playerAnimation.SetBoolJump(GroundCheck());
             _playerAnimation.SetBoolSlide(_isSliding);
+            _playerAnimation.SetBoolLedge(_canClimb);
+            _playerAnimation.SetBoolKnocked(_isKnocked);
+
+            if (_rb.velocity.y < -5)
+            {
+                _playerAnimation.SetBoolRoll(true);
+            }
+        }
+
+        private void CancelKnockback()
+        {
+            _isKnocked = false;
+        }
+
+        private void CheckForLedge()
+        {
+            if (_ledgeDetected && _canGrabLedge)
+            {
+                _canGrabLedge = false;
+
+                Vector2 ledgePosition = GetComponentInChildren<LedgeDetection>().transform.position;
+                _climbBegunPosition = ledgePosition + _offset1;
+                _climbOverPosition = ledgePosition + _offset2;
+
+                _canClimb = true;
+            }
+
+            if (_canClimb)
+            {
+                transform.position = _climbBegunPosition;
+            }
         }
 
         private void CheckForSlide()
         {
-            if (_slideTimerCounter < 0)
+            if (_slideTimerCounter < 0 && !SilingCheck())
             {
                 _isSliding = false;
             }
+        }
+
+        private IEnumerator Die()
+        {
+            _isDead = true;
+            _canBeKnocked = false;
+            _rb.velocity = new Vector2(0, 0);
+            _playerAnimation.SetBoolDead(true);
+            yield return new WaitForSeconds(1f);
         }
 
         private bool GroundCheck()
@@ -102,8 +187,24 @@ namespace ParkourGame.PlayerFolder
             return Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _whatIsGround);
         }
 
+        private IEnumerator Invicibility()
+        {
+            Color originalColor = _sr.color;
+            Color darkenColor = new Color(_sr.color.r, _sr.color.g, _sr.color.b, .5f);
+            _canBeKnocked = false;
+            _sr.color = darkenColor;
+            yield return new WaitForSeconds(2.5f);
+            _sr.color = originalColor;
+            _canBeKnocked = true;
+        }
+
         private void Jump()
         {
+            if (SilingCheck())
+            {
+                return;
+            }
+
             if (GroundCheck())
             {
                 _canDoubleJump = true;
@@ -116,8 +217,33 @@ namespace ParkourGame.PlayerFolder
             }
         }
 
+        private void Knockback()
+        {
+            if (!_canBeKnocked)
+            {
+                return;
+            }
+
+            StartCoroutine(Invicibility());
+            _isKnocked = true;
+            _rb.velocity = _knockackDir;
+        }
+
+        private void LedgeClimbOver()
+        {
+            _canClimb = false;
+
+            transform.position = _climbOverPosition;
+            Invoke("AllowLedgeGrab", .1f);
+        }
+
         private void Moving()
         {
+            if (WallCheck())
+            {
+                return;
+            }
+
             if (_isSliding)
             {
                 _rb.velocity = new Vector2(_slideSpeed, _rb.velocity.y);
@@ -126,6 +252,16 @@ namespace ParkourGame.PlayerFolder
             {
                 _rb.velocity = new Vector2(_moveSpeed, _rb.velocity.y);
             }
+        }
+
+        private void RollAnimFinished()
+        {
+            _playerAnimation.SetBoolRoll(false);
+        }
+
+        private bool SilingCheck()
+        {
+            return Physics2D.Raycast(transform.position, Vector2.up, _ceillingCheckDistance, _whatIsGround);
         }
 
         private void Slide()

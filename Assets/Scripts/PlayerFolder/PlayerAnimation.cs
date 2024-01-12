@@ -11,7 +11,10 @@ namespace ParkourGame.PlayerFolder
         private readonly int _xVelocity = Animator.StringToHash("xVelocity");
         private readonly int _isGrounded = Animator.StringToHash("isGrounded");
         private readonly int _isSliding = Animator.StringToHash("isSliding");
-
+        private readonly int _canClimb = Animator.StringToHash("canClimb");
+        private readonly int _canRoll = Animator.StringToHash("canRoll");
+        private readonly int _isKnocked = Animator.StringToHash("isKnocked");
+        private readonly int _isDead = Animator.StringToHash("isDead");
         public void SetBoolRun(bool value)
         {
             _animator.SetBool(_isRunning, value);
@@ -36,6 +39,26 @@ namespace ParkourGame.PlayerFolder
         public void SetBoolSlide(bool value)
         {
             _animator.SetBool(_isSliding, value);
+        }
+        
+        public void SetBoolLedge(bool value)
+        {
+            _animator.SetBool(_canClimb, value);
+        }
+        
+        public void SetBoolRoll(bool value)
+        {
+            _animator.SetBool(_canRoll, value);
+        }
+        
+        public void SetBoolKnocked(bool value)
+        {
+            _animator.SetBool(_isKnocked, value);
+        }
+
+        public void SetBoolDead(bool value)
+        {
+            _animator.SetBool(_isDead, value);
         }
         
     }
