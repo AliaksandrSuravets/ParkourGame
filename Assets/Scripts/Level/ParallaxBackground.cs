@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace ParkourGame
+namespace ParkourGame.Level
 {
     public class ParallaxBackground : MonoBehaviour
     {

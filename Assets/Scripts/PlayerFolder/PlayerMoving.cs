@@ -173,6 +173,11 @@ namespace ParkourGame.PlayerFolder
             }
         }
 
+        public void StartDie()
+        {
+            StartCoroutine(Die());
+        }
+        
         private IEnumerator Die()
         {
             _isDead = true;
@@ -217,7 +222,7 @@ namespace ParkourGame.PlayerFolder
             }
         }
 
-        private void Knockback()
+        public void Knockback()
         {
             if (!_canBeKnocked)
             {

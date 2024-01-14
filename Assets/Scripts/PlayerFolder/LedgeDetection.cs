@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using ParkourGame.PlayerFolder;
+using ParkourGame.Level;
 using UnityEngine;
 
-namespace ParkourGame
+namespace ParkourGame.PlayerFolder
 {
     public class LedgeDetection : MonoBehaviour
     {
