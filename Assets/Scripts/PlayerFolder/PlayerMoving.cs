@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using ParkourGame.Service;
 using UnityEngine;
 
 namespace ParkourGame.PlayerFolder
@@ -67,6 +68,17 @@ namespace ParkourGame.PlayerFolder
             _slideCooldownCounter -= Time.deltaTime;
 
             Animation();
+            
+
+            if (Time.timeScale == 0)
+            {
+                return;
+            }
+
+            if (!GameService.instance.CanRun)
+            {
+                return;
+            }
 
             if (_isDead)
             {
@@ -185,6 +197,7 @@ namespace ParkourGame.PlayerFolder
             _rb.velocity = new Vector2(0, 0);
             _playerAnimation.SetBoolDead(true);
             yield return new WaitForSeconds(1f);
+            GameService.instance.CallEndUi();
         }
 
         private bool GroundCheck()
