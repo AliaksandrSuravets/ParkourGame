@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using ParkourGame.PlayerFolder;
 using UnityEngine;
 
-namespace ParkourGame
+namespace ParkourGame.Enemy
 {
     public class Trap : MonoBehaviour
     {

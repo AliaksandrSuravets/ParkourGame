@@ -1,14 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using ParkourGame.Service;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace ParkourGame
+namespace ParkourGame.Ui
 {
     public class UiMain : MonoBehaviour
     {
         #region Variables
+
+        [SerializeField] private UiVolumeSlider[] _uiVolumeSliders;
+
+        private void Start()
+        {
+            for (int i = 0; i < _uiVolumeSliders.Length; i++)
+            {
+                _uiVolumeSliders[i].SetupSlider();
+            }
+        }
 
         private bool _gamePaused;
 
@@ -50,6 +59,7 @@ namespace ParkourGame
             }
 
             uiMenu.SetActive(true);
+            AudioService.Instance.PlaySFX(4);
         }
 
         #endregion

@@ -19,8 +19,8 @@ namespace YG
         // Ваши сохранения
 
         public int BestScore = 0;
-        public float Music = 0.2f;
-        public float Soiund = 0.2f;
+        public float bgm = 0.2f;
+        public float sfx = 0.2f;
          
 
         // ...

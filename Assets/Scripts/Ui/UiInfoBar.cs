@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using ParkourGame.Service;
 using TMPro;
 using UnityEngine;
-using YG;
 
-namespace ParkourGame
+namespace ParkourGame.Ui
 {
     public class UiInfoBar : MonoBehaviour
     {

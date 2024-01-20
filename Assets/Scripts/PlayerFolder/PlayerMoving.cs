@@ -1,7 +1,8 @@
-using System;
+ 
 using System.Collections;
 using ParkourGame.Service;
 using UnityEngine;
+ 
 
 namespace ParkourGame.PlayerFolder
 {
@@ -192,6 +193,7 @@ namespace ParkourGame.PlayerFolder
         
         private IEnumerator Die()
         {
+            AudioService.Instance.PlaySFX(3);
             _isDead = true;
             _canBeKnocked = false;
             _rb.velocity = new Vector2(0, 0);
@@ -227,11 +229,13 @@ namespace ParkourGame.PlayerFolder
             {
                 _canDoubleJump = true;
                 _rb.velocity = new Vector2(_moveSpeed, _jumpForce);
+                AudioService.Instance.PlaySFX(Random.Range(1,2));
             }
             else if (_canDoubleJump)
             {
                 _canDoubleJump = false;
                 _rb.velocity = new Vector2(_moveSpeed, _jumpForce);
+                AudioService.Instance.PlaySFX(Random.Range(1,2));
             }
         }
 

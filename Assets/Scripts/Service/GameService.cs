@@ -1,4 +1,5 @@
 using System;
+using ParkourGame.Ui;
 using UnityEngine;
 using YG;
 
@@ -70,6 +71,7 @@ namespace ParkourGame.Service
             Debug.Log(Coin);
             BestScore = Coin;
             YandexGame.savesData.BestScore = BestScore;
+            YandexGame.SaveProgress();
         }
 
         #endregion

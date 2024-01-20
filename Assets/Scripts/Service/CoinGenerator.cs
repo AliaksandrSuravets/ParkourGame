@@ -1,10 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using ParkourGame.Level;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace ParkourGame
+namespace ParkourGame.Service
 {
     public class CoinGenerator : MonoBehaviour
     {

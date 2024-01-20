@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using ParkourGame.Service;
 using UnityEngine;
 
-namespace ParkourGame
+namespace ParkourGame.Level
 {
     public class Coin : MonoBehaviour
     {
@@ -13,6 +10,7 @@ namespace ParkourGame
             if (other.CompareTag("Player"))
             {
                 GameService.instance.AddCoin();
+                AudioService.Instance.PlaySFX(0);
                 Destroy(gameObject);
             }
         }
