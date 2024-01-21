@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using YG;
 
-namespace ParkourGame
+namespace ParkourGame.Ui
 {
     public class UiVolumeSlider : MonoBehaviour
     {

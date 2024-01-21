@@ -1,5 +1,6 @@
  
 using System.Collections;
+using Cinemachine;
 using ParkourGame.Service;
 using UnityEngine;
  
@@ -25,7 +26,8 @@ namespace ParkourGame.PlayerFolder
         [SerializeField] private Rigidbody2D _rb;
         [SerializeField] private PlayerAnimation _playerAnimation;
         [SerializeField] private SpriteRenderer _sr;
-
+        [SerializeField] private CinemachineVirtualCamera _camera;
+        
         [Header("Slide info")]
         [SerializeField] private float _slideSpeed;
         [SerializeField] private float _slideTimer;
@@ -189,6 +191,16 @@ namespace ParkourGame.PlayerFolder
         public void StartDie()
         {
             StartCoroutine(Die());
+        }
+
+        public void DieInSpace()
+        {
+            _camera.Follow = null;
+            Destroy(_camera.gameObject);
+            _isDead = true;
+            _canBeKnocked = false;
+            _rb.velocity = new Vector2(0, 0);
+            GameService.instance.CallEndUi();
         }
         
         private IEnumerator Die()
