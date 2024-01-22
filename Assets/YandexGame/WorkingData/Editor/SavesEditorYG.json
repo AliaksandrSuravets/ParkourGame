@@ -1,5 +1,5 @@
 {
-    "idSave": 29,
+    "idSave": 30,
     "isFirstSession": false,
     "language": "en",
     "promptDone": false,
@@ -10,7 +10,7 @@
         true,
         false
     ],
-    "BestScore": 296,
+    "BestScore": 369,
     "bgm": 0.4416143298149109,
     "sfx": 0.3168852627277374
 }
