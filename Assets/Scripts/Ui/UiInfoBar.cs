@@ -1,6 +1,7 @@
 using ParkourGame.Service;
 using TMPro;
 using UnityEngine;
+using YG;
 
 namespace ParkourGame.Ui
 {
@@ -27,7 +28,15 @@ namespace ParkourGame.Ui
         {
             if (_currentScore != null)
             {
-                _currentScore.text = $"Score: {GameService.instance.Coin}";
+                if (YandexGame.lang == "ru")
+                {
+                    _currentScore.text = $"Результат: {GameService.instance.Coin}";
+                }
+                else
+                {
+                    _currentScore.text = $"Score: {GameService.instance.Coin}";
+                }
+               
             }
         }
     }

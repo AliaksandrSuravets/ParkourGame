@@ -41,6 +41,18 @@ namespace ParkourGame.Service
             CanRun = false;
         }
 
+        private void Start()
+        {
+            if (YandexGame.savesData.isFirstSession)
+            {
+                  YandexGame.SwitchLanguage(YandexGame.lang == "ru" ? "ru" : "en");
+            }
+            else
+            {
+                YandexGame.SwitchLanguage(YandexGame.savesData.language);
+            }
+        }
+
         #endregion
 
         #region Public methods
@@ -60,17 +72,19 @@ namespace ParkourGame.Service
         {
             return _color;
         }
-
+        
+        private static readonly string NAME_LEAD = "LEADBORD";
         public void SetBestScore()
         {
             if (Coin <= BestScore)
             {
                 return;
             }
-
-            Debug.Log(Coin);
+            
             BestScore = Coin;
+            
             YandexGame.savesData.BestScore = BestScore;
+            YandexGame.NewLeaderboardScores(NAME_LEAD, BestScore);
             YandexGame.SaveProgress();
         }
 

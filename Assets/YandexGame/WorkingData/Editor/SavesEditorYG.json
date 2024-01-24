@@ -1,16 +1,16 @@
 {
-    "idSave": 30,
-    "isFirstSession": false,
-    "language": "en",
-    "promptDone": false,
-    "money": 1,
-    "newPlayerName": "Hello!",
-    "openLevels": [
-        false,
-        true,
-        false
-    ],
-    "BestScore": 369,
-    "bgm": 0.4416143298149109,
-    "sfx": 0.3168852627277374
+  "idSave": 113,
+  "isFirstSession": false,
+  "language": "ru",
+  "promptDone": false,
+  "money": 1,
+  "newPlayerName": "Hello!",
+  "openLevels": [
+    false,
+    true,
+    false
+  ],
+  "BestScore": 369,
+  "bgm": 0.737224638,
+  "sfx": 1.0
 }
